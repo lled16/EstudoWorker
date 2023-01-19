@@ -11,9 +11,16 @@ using System.Threading.Tasks;
 
 namespace AprendendoWorker.Properties.RetornaDados
 {
-    public class SendToDB : IGetDataResponse
+    public class GetDataResponse : IGetDataResponse
     {
-        public int SendPersonToDb(List<GetResults> persons, ILogger<Worker> logger)
+    private readonly ILogger<GetDataResponse> _logger;
+
+        public GetDataResponse(ILogger<GetDataResponse> logger)
+        {
+            _logger = logger;
+        }
+
+        public int SendPersonToDb(List<GetResults> persons)
         {
             DataContext cadPerson = new();
             int resultadoInsert = 0;
@@ -22,16 +29,11 @@ namespace AprendendoWorker.Properties.RetornaDados
             {
                 if (persons.Count != 0)
                 {
-                    //foreach(var person in persons)
-                    //{
-                    //    cadPerson.Personagens.Add(person.Results[0]);
-
-                    //}
                     for (int i = 0; i < persons.Count; i++)
                     {
                         cadPerson.RICKMORTY.Add(persons[i]);
                         cadPerson.SaveChanges();
-                        logger.LogInformation("Personagem :" + persons[i].Name + ", inserido com sucesso !");
+                        _logger.LogInformation("Personagem :" + persons[i].Name + ", inserido com sucesso !");
                         
 
                         if (i == persons.Count - 1)

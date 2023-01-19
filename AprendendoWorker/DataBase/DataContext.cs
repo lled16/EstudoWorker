@@ -16,7 +16,10 @@ namespace AprendendoWorker.DataBase
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 
-            optionsBuilder.UseSqlServer("server=DESKTOP-278IVMV;database=RICKMORTY;trusted_connection=true;Integrated Security=SSPI;TrustServerCertificate=True;");
+            //optionsBuilder.UseSqlServer("server=DESKTOP-278IVMV;database=RICKMORTY;trusted_connection=true;Integrated Security=SSPI;TrustServerCertificate=True;");
+
+            //Brunsker
+            optionsBuilder.UseSqlServer("Server=localhost;database=RICKMORTY;trusted_connection=true;Integrated Security=SSPI;TrustServerCertificate=True;");
 
 
         }

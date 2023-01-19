@@ -1,29 +1,39 @@
 using AprendendoWorker.DataBase;
+using AprendendoWorker.Interfaces;
 using AprendendoWorker.Models.PersonsResponse;
 using AprendendoWorker.Properties.RetornaDados;
-using AprendendoWorker.Services.GetPersons;
+using AprendendoWorker.Services.GetPersonsWorker;
+using Azure.Messaging;
 using Newtonsoft.Json;
 
 namespace AprendendoWorker
 {
     public class Worker : BackgroundService
     {
-        private readonly ILogger<Worker> _logger;
+        public  ILogger<Worker> _logger;
+        public  IGetPersonsWorker _getPersonsWorker;
 
-        public Worker(ILogger<Worker> logger)
-        {
+        public Worker(ILogger<Worker> logger, IGetPersonsWorker getPersonsWorker)
+        {   
+            _getPersonsWorker= getPersonsWorker;
             _logger = logger;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            GetPersons getPerson = new();
+           
             while (!stoppingToken.IsCancellationRequested)
             {
                 _logger.LogInformation("Worker iniciado em: {time}", DateTimeOffset.Now);
 
-                int cadastroPersonages =  getPerson.GetDadosPer(_logger);
+                try
+                {
 
+                    int cadastroPersonages = _getPersonsWorker.GetDadosPer();
+                }catch(Exception ex) 
+                {
+                    new Exception(message: ex.ToString());
+                }
 
                 await Task.Delay(10000, stoppingToken);
 

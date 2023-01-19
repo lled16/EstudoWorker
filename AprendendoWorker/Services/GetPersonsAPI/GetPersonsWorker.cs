@@ -1,5 +1,7 @@
-﻿using AprendendoWorker.Models.PersonsResponse;
+﻿using AprendendoWorker.Interfaces;
+using AprendendoWorker.Models.PersonsResponse;
 using AprendendoWorker.Properties.RetornaDados;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,20 +9,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AprendendoWorker.Services.GetPersons
-{
-    public class GetPersons
+namespace AprendendoWorker.Services.GetPersonsWorker
+{       
+    public class GetPersonsWorker : IGetPersonsWorker
     {
+        private readonly IGetDataResponse _getDataResponse;
+        private readonly ILogger<GetPersonsWorker> _logger;
 
-        public int GetDadosPer(ILogger<Worker> logger)
+        public GetPersonsWorker(IGetDataResponse getDataResponse, ILogger<GetPersonsWorker> logger)
         {
-            int getResponse = GetDadosPersonagens(logger);
+            _getDataResponse = getDataResponse;
+            _logger = logger;
+        }
+
+        public int GetDadosPer()
+        {
+            int getResponse = GetDadosPersonagens(_logger);
 
 
             return getResponse;
         }
 
-        public  int GetDadosPersonagens(ILogger<Worker> logger)
+        public  int GetDadosPersonagens(ILogger logger)
         {
             int resultadoInsert = 0;
 
@@ -36,11 +46,11 @@ namespace AprendendoWorker.Services.GetPersons
             List<GetResults> response = JsonConvert.DeserializeObject<GetPersonsAPI>(request.Result).Results;
 
 
-            SendToDB sendDB = new();
+           
 
             try
             {
-                resultadoInsert = sendDB.SendPersonToDb(response, logger);
+                resultadoInsert = _getDataResponse.SendPersonToDb(response);
 
                 if(resultadoInsert == 1)
                 {
