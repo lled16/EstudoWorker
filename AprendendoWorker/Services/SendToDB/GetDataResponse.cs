@@ -22,9 +22,9 @@ namespace AprendendoWorker.Properties.RetornaDados
 
         public int SendPersonToDb(List<GetResults> persons)
         {
-            DataContext cadPerson = new();
+            DataContext cadPerson  = new();
             int resultadoInsert = 0;
-
+            string T = "";
             try
             {
                 if (persons.Count != 0)
